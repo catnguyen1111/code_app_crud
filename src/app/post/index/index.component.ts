@@ -1,0 +1,34 @@
+import { Component, OnInit } from '@angular/core';
+
+import {Post} from '../post';
+import { PostService } from '../post.service';
+
+@Component({
+  selector: 'app-index',
+  templateUrl: './index.component.html',
+  styleUrls: ['./index.component.scss']
+})
+export class IndexComponent implements OnInit {
+  posts:Post[] = [];
+
+  constructor(private postService: PostService) { }
+
+  ngOnInit(): void {
+    this.getPostAll();
+  }
+  getPostAll(){
+    this.postService.getAll().subscribe((data:Post[]) =>
+      {
+        this.posts = data;
+        console.log(this.posts)
+      })
+  }
+  deletePost(id:any){
+    this.postService.delete(id).subscribe((res)=>{
+      this.posts = this.posts.filter(item =>item.id !=id);
+    })
+  }
+  trackByFn(index:number,item:any){
+    return index;
+  }
+}
